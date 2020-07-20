@@ -9,12 +9,12 @@ const fs = require("fs");
 var app = express();
 var PORT = process.env.PORT || 7000;
 
-notes = []
 
 // Sets up the Express app to handle data parsing
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+// Adding the GET methods for link directs
 app.get("/notes", function (req, res) {
     res.sendFile(path.join(__dirname, "notes.html"));
 });
@@ -26,17 +26,25 @@ app.get("/api/notes", function (req, res) {
         return res.json(JSON.parse(data));
     })
 });
-// Create New Characters - takes in JSON input
+var notes = [];
+
+// Creating new note and adding the notes written on the page to the db.json file
 app.post("/api/notes", function(req, res) {
     // req.body hosts is equal to the JSON post sent from the user
     // This works because of our body parsing middleware
-    var newNote = req.body;
+    var writeNote = req.body;
     
-    console.log(newNote);
+    console.log(writeNote);
   
-    notes.push(newNote);
-  
-    res.json(newNote);
+    notes.push(writeNote);
+    fs.readFile("db/db.json",function(err,data){
+        const re = JSON.parse(data)
+        for (i in re){
+            //
+        }
+    })
+
+    res.json(notes);
   });
 
 app.delete("/api/notes/:id", function(req, res){
